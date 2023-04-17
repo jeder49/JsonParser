@@ -1,0 +1,111 @@
+{
+  "vocs": {
+    "0": {
+      "kind": "normal",
+      "key": [
+        {"type": "text", "value":  "hi"},
+        {"type": "image", "value": "C://..."},
+        {"type": "text", "value": "sadfa"}
+      ],
+      "data": [
+        {"type": "text", "value":  "ho"}
+      ],
+      "comment": [
+        {"type": "sound", "value": "C://..."}
+      ]
+    },
+    "1": {
+      "kind": "order",
+      "key": [
+        {"type": "text", "value":  "put this shit in order:"}
+      ],
+      "data": [
+        {"type": "text", "value":  "[]"},
+        {"type": "text", "value":  "~"},
+        {"type": "text", "value":  "!"},
+        {"type": "text", "value":  "-"},
+        {"type": "text", "value":  "&"},
+        {"type": "text", "value":  "|"},
+        {"type": "text", "value":  "^"},
+        {"type": "text", "value":  "~&"},
+        {"type": "text", "value":  "~|"}
+      ],
+      "comment": [
+        {"type": "text", "value": "find ik gud"}
+      ]
+    },
+    "2": {
+      "kind": "connect",
+      "key": [
+        {"type": "text", "value":  "connect this stuff"},
+        {"type": "text", "value":  "A"},
+        {"type": "text", "value":  "B"},
+        {"type": "text", "value":  "C"}
+      ],
+      "data": [
+        {"type": "text", "value":  "A'"},
+        {"type": "text", "value":  "B'"},
+        {"type": "text", "value":  "C'"}
+      ],
+      "comment": [
+        {"type": "text", "value": "find ik gud"}
+      ]
+    },
+    "3": {
+      "kind": "predicate",
+      "key": [
+        {"type": "text", "value":  "This is funny. Is this statement true or false?"}
+      ],
+      "data": true,
+      "comment": [
+        {"type": "text", "value": "find ik gud"}
+      ]
+    },
+    "4": {
+      "kind": "multiple_choice",
+      "key": [
+        {"type": "text", "value":  "What is the longest thing?"}
+      ],
+      "data": [
+        {"answer": "I", "solution": false},
+        {"answer": "Mount everest", "solution": false},
+        {"answer": "jgfugsdoifsdiofsdioh", "solution": true}
+      ],
+      "comment": [
+        {"type": "text", "value": "find ik gud"}
+      ]
+    }
+  },
+  "folders": {
+    "0": {
+      "name": "root",
+      "vocs": [],
+      "children": [1]
+    },
+    "1": {
+      "name": "Semester1",
+      "vocs": [],
+      "children": [2, 3]
+    },
+    "2": {
+      "name": "Mathe1",
+      "vocs": [],
+      "children" : [4, 5]
+    },
+    "3": {
+      "name": "Afe",
+      "vocs": [],
+      "children" : [5]
+    },
+    "4": {
+      "name": "Arithmetik",
+      "vocs": [1,4,8,12,23,2],
+      "children": []
+    },
+    "5": {
+      "name": "Mengenlehre",
+      "vocs": [4,21,6,2,15,11],
+      "children": []
+    }
+  }
+}

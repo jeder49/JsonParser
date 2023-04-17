@@ -1,0 +1,39 @@
+{
+  "sets":[
+    {"runID": 0, "time": "2023-04-09 15:16:00", "action": "started", "lists": ["MatheI"]},
+    {"runID": 1, "time": "2023-04-09 15:16:10", "action": "started", "lists": ["MatheI, MatheII"]},
+    {"runID": 1, "time": "2023-04-09 15:20:00", "action": "ended", "lists": ["MatheI, MatheII"]},
+    {"runID": 0, "time": "2023-04-09 15:30:00", "action": "ended", "lists": ["MatheI"]}
+  ],
+  "vocs": {
+    "0": [
+      {
+        "runID": 0,
+        "time": "2023-04-09 15:16:05",
+        "action": "wrong"
+      },
+      {
+        "runID": 1,
+        "time": "2023-04-09 15:17:30",
+        "action": "right"
+      },
+      {
+        "runID": 0,
+        "time": "2023-04-09 15:18:00",
+        "action": "right"
+      }
+    ],
+    "1": [
+      {
+        "runID": 0,
+        "time": "2023-04-09 15:16:10",
+        "action": "wrong"
+      },
+      {
+        "runID": 1,
+        "time": "2023-04-09 15:17:00",
+        "action": "right"
+      }
+    ]
+  }
+}
