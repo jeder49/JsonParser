@@ -8,13 +8,24 @@
 #include <algorithm>
 #include <iostream>
 #include "JsonParser.h"
+#include "JsonNull.h"
+#include "JsonBoolean.h"
 #include <string>
+#include <utility>
+#include "SyntaxException.h"
 
-JsonParser::JsonParser() {
+/**
+ * 
+ */
+JsonParser::JsonParser() : _root(nullptr){
     std::cout << "created JsonParser" << std::endl;
 }
 
-JsonParser::JsonParser(std::string path) : _path(path){
+/**
+ *
+ * @param path
+ */
+JsonParser::JsonParser(std::string path) : _root(nullptr), _path(std::move(path)){
     std::cout << "created JsonParser" << std::endl;
     //todo: throw if does not end with json
 }
@@ -32,7 +43,8 @@ std::ifstream JsonParser::content() {
         if (!file) {
             throw std::runtime_error("Failed to open file: " + _path);
         }
-
+        //todo why???
+        _content << file.rdbuf();
         return file;
 
     // throw error if file does not exist
@@ -41,6 +53,9 @@ std::ifstream JsonParser::content() {
     }
 }
 
+/**
+ *
+ */
 //prints all files in a folder
 void JsonParser::printFolder(){
     std::string current_dir = "..";
@@ -52,92 +67,309 @@ void JsonParser::printFolder(){
     }
 }
 
+/**
+ *
+ * @return
+ */
 JsonValue* JsonParser::parse() {
-    // Iterate through the file character by character
-    std::ifstream file = this->content();
-    int ch;
-    while ((ch = file.get()) != -1) {
-        if(static_cast<char>(ch) == '{'){
-            std::cout << "hi" << std::endl;
-        }
+    //check if _root is not null -> delete root
+    if(_root != nullptr){
+       delete _root;
     }
 
-    // Close the file
-    file.close();
-    return nullptr;
+    // Iterate through the file character by character
+    this->content();
+    int ch;
+    while ((ch = _content.get()) != -1) {
+        if(static_cast<char>(ch) == '{'){
+            parseObject();
+        } else if(static_cast<char>(ch) == '['){
+            parseArray();
+        } else{
+            throw SyntaxException("expected: { or [");
+        }
+    }
+    return _root;
 }
 
+/**
+ *
+ * @param path
+ */
 void JsonParser::setPath(std::string path) {
     _path = path;
-    //todo: throw if does not end with json
 }
 
+/**
+ *
+ * @return
+ */
 std::string JsonParser::getPath() {
     return _path;
 }
 
-JsonValue *JsonParser::parseValue() {
-    return nullptr;
+/**
+ *
+ * @return
+ */
+JsonValue JsonParser::parseValue() {
+    if (_content.peek() == '\"'){
+        return parseString();
+    }
+    if (_content.peek() =='[') {
+        return parseArray();
+    }
+    if (_content.peek() =='{') {
+        return parseObject();
+    }
+    if (_content.peek() == 'n') {
+        JsonNull jn(column, row);
+        column++;
+        return jn;
+    }
+    if (_content.peek() == 't'){
+        JsonBoolean jb(column, row, true);
+        column++;
+        return jb;
+    }
+    if (_content.peek() == 'f') {
+        JsonBoolean jb(column, row, false);
+        column++;
+        return jb;
+    }
+
+    throw SyntaxException("expected: JsonValue: \", [, {, null, false or true");
 }
 
-JsonObject *JsonParser::parseObject() {
-    return nullptr;
+/**
+ *
+ * @return
+ */
+JsonObject JsonParser::parseObject() {
+    if(!expect('{')){
+        throw SyntaxException("expected: {");
+    }
+    JsonObject jo(column, row);
+    column++;
+    do {
+        skipWhitespaces();
+        jo.addChild(parseEntry());
+    } while(expect(','));
+    skipWhitespaces();
+    if(!expect('}')){
+        throw SyntaxException("expected: }");
+    }
+    return jo;
 }
 
-JsonArray *JsonParser::parseArray() {
-    return nullptr;
+/**
+ *
+ * @return
+ */
+JsonArray JsonParser::parseArray() {
+    if(!expect('[')){
+        throw SyntaxException("expected: [");
+    }
+    JsonArray ja(column, row);
+    column++;
+    do {
+        skipWhitespaces();
+        ja.addChild( parseValue() );
+    } while(expect(','));
+    skipWhitespaces();
+    if(!expect(']')){
+        throw SyntaxException("expected: ]");
+    }
+    return ja;
 }
 
-JsonString *JsonParser::parseString() {
-    return nullptr;
+/**
+ *
+ * @return
+ */
+JsonString JsonParser::parseString() {
+    std::cout << "parseString" << std::endl;
+    if(!expect ('\"')){
+        throw SyntaxException("expected: \"");
+    }
+    JsonString js(column, row);
+    column++;
+    js.setString(getStringTill('\"'));
+    if(!expect ('\"')){
+        throw SyntaxException("expected: \"");
+    }
+    return js;
 }
 
-JsonNumber *JsonParser::parseNumber() {
-    return nullptr;
+/**
+ *
+ * @return
+ */
+JsonNumber JsonParser::parseNumber() {
+    column++;
+    JsonNumber jn(column, row);
+    std::string s = "";
+    if (expect ('-')) {
+        s = s + '-';
+    }
+    bool b = true;
+    while (b) {
+        b = false;
+        for (int i = 0; i < 9; i++){
+            if (expect(i)){
+                b = true;
+                s = s + std::to_string(i);
+           }
+        }
+    }
+    if (expect('e')){
+        s = s + 'e';
+        if (expect('+')){
+            s = s + '+';
+        }
+        if (expect('-')){
+            s = s + '-';
+        }
+        bool change = false;
+        b = true;
+        while (b) {
+            b = false;
+            for (int i = 0; i < 9; i++){
+                if (expect(i)){
+                    b = true;
+                    change = true;
+                    s = s + std::to_string(i);
+                }
+            }
+        }
+    }else if (expect('E')){
+        s = s + 'E';
+        if (expect('+')){
+            s = s + '+';
+        }
+        if (expect('-')){
+            s = s + '-';
+        }
+        b = true;
+        while (b) {
+            b = false;
+            for (int i = 0; i < 9; i++){
+                if (expect(i)){
+                    b = true;
+                    s = s + std::to_string(i);
+                }
+            }
+        }
+    }
+
+    jn.setNumber(std::stod(s));
+    return jn;
 }
 
+/**
+ *
+ */
 void JsonParser::skipWhitespaces() {
-
+    bool b = true;
+    while(b){
+        b = false;
+        if (_content.peek() == ' ') {
+            _content.get();
+            b = true;
+        }
+        if (_content.peek() == '\n'){
+            _content.get();
+            row ++;
+            b = true;
+        }
+    }
 }
 
+/**
+ *
+ */
 JsonParser::~JsonParser() {
     delete _root;
 }
 
-bool JsonParser::expected(std::string) {
+/**
+ * looks if the next character of the stream is equal to c if yes it deletes this character.
+ * @param c is the character we check for
+ * @return true if the next character of the stream is equal to c
+ */
+bool JsonParser::expect(char c) {
+    if(c == _content.peek()){
+        _content.get();
+        return true;
+    }
     return false;
 }
 
-//insert
-void JsonParser::write(const std::string& textToInsert, std::streampos position) {
-    std::ifstream fileIn(_path); // open the file for reading
-    if (!fileIn.is_open()) {
-        std::cerr << "Unable to open file: " << _path << std::endl;
-        return;
+/**
+ *
+ */
+void JsonParser::write() {
+
+}
+
+/**
+ *
+ * @param jv
+ */
+void JsonParser::addRoot(JsonValue jv) {
+    if(_root == nullptr){
+        _root = &jv;
     }
+}
 
-    std::string fileContents((std::istreambuf_iterator<char>(fileIn)), std::istreambuf_iterator<char>()); // read the contents of the file into a string
-    fileIn.close(); // close the file
-
-    /*std::istringstream content (this->content().str());
-
-    //TODO
-    // Create a stream iterator for the ostringstream
-    std::istream_iterator<char> iter(content);
-    std::istream_iterator<char> end;
-
-    // Use the stream iterator to copy the content of the ostringstream to cout
-    std::copy(iter, end, std::ostream_iterator<char>(std::cout));
-    */
-
-    fileContents.insert(position, textToInsert); // insert the desired text at the specified position
-
-    std::ofstream fileOut(_path); // open the file for writing
-    if (!fileOut.is_open()) {
-        std::cerr << "Unable to open file: " << _path << std::endl;
-        return;
+/**
+ *
+ * @param c
+ * @return a string
+ */
+std::string JsonParser::getStringTill(char c) {
+    std::string res;
+    while(_content.peek() != c){
+        res += _content.get();
     }
+    return res;
+}
 
-    fileOut << fileContents; // write the modified string to the file
-    fileOut.close(); // close the file
+/**
+ *
+ * @return
+ */
+JsonEntry JsonParser::parseEntry() {
+    JsonEntry je;
+    std::cout<< "aaaa";
+    parseString();
+    skipWhitespaces();
+    if(!expect(':')){
+        throw SyntaxException("expected: :");
+    }
+    skipWhitespaces();
+    std::cout<< "aaaa";
+    parseValue();
+    return je;
+}
+
+std::string JsonParser::toString(){
+    return toStringRecursive(* _root,"");
+}
+
+std::string JsonParser::toStringRecursive(JsonValue cursor, std::string prefix){
+    std::string res = "";
+    if(cursor.getType() == JsonType::OBJECT){
+        for(auto & i : static_cast<JsonObject>(cursor).getEntry()) {
+            res = res + prefix + "  " + "|->" + i.getName().toString() + " : " + toStringRecursive(cursor, "  ") + "\n";
+        }
+        return res;
+    } else if(cursor.getType() == JsonType::ARRAY){
+        for(auto & i : cursor.getChildren()) {
+            res = res + prefix + "  " + "|-> " + toStringRecursive(i, "  ") + "\n";
+        }
+        return res;
+    } else {
+        return cursor.toString();
+    }
 }

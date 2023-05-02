@@ -5,7 +5,7 @@
 #include "JsonBoolean.h"
 #include <iostream>
 
-JsonBoolean::JsonBoolean(int column, int row) : JsonValue(column, row, JsonType::BOOLEAN){
+JsonBoolean::JsonBoolean(int column, int row, bool b) : JsonValue(column, row, JsonType::BOOLEAN), _b(b){
     std::cout << "create JsonBoolean" << std::endl;
 }
 

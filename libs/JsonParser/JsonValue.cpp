@@ -68,3 +68,7 @@ void JsonValue::replaceThisWith(JsonValue) {
 void JsonValue::deleteThis() {
 
 }
+
+std::string JsonValue::toString() {
+    return "JsonValue impl.";
+}

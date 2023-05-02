@@ -11,5 +11,14 @@ JsonString::JsonString(int column, int row) : JsonValue(column, row, JsonType::S
 }
 
 JsonString::~JsonString() {
-    std::cout << "JsonString destructor \n";
+    std::cout << "JsonString destructor; string: " << _s << std::endl;
+}
+
+void JsonString::setString(std::string s) {
+    _s = s;
+    std::cout << "string: " << _s << std::endl;
+}
+
+std::string JsonString::getString() {
+    return _s;
 }

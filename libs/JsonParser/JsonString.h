@@ -10,8 +10,8 @@
 class JsonString : public JsonValue{
 private:
     //you are not allowed to switch JsonString with other JsonValue if JsonString is a name
-    bool name;
-    std::string s;
+    bool _name;
+    std::string _s;
 public:
     //constructor
     JsonString(int column, int row);

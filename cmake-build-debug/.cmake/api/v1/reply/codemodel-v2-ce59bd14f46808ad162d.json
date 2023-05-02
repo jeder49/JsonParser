@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "JsonParser::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-JsonParser-Debug-063da01fc9308fc8d9b7.json",
+					"jsonFile" : "target-JsonParser-Debug-bc72a6a6b10b56c4e34a.json",
 					"name" : "JsonParser",
 					"projectIndex" : 0
 				}
@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/Frei/CLionProjects/JsonParser/cmake-build-debug",
-		"source" : "C:/Users/Frei/CLionProjects/JsonParser"
+		"build" : "C:/Users/Workspace/Documents/GitHub/JsonParser/cmake-build-debug",
+		"source" : "C:/Users/Workspace/Documents/GitHub/JsonParser"
 	},
 	"version" : 
 	{

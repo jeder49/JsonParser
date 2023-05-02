@@ -13,10 +13,10 @@ JsonNumber::~JsonNumber() {
     std::cout << "JsonNumber destructor \n";
 }
 
-int JsonNumber::getNumber() {
-    return 0;
+double JsonNumber::getNumber() {
+    return _num;
 }
 
-void JsonNumber::setNumber(int i) {
-
+void JsonNumber::setNumber(double num) {
+    _num = num;
 }

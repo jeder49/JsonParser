@@ -36,6 +36,8 @@ public:
     void replaceThisWith(JsonValue);
     void addChild(JsonValue value);
 
+    std::string toString();
+
 public:
     //destructor
     ~JsonValue();

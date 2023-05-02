@@ -9,18 +9,22 @@ JsonEntry::~JsonEntry() {
     std::cout << "JsonEntry destructor \n";
 }
 
-void JsonEntry::setValue(JsonValue) {
-
+void JsonEntry::setValue(JsonValue jv) {
+    _value = &jv;
 }
 
-void JsonEntry::setName(JsonValue) {
-
+void JsonEntry::setName(JsonString js) {
+    _name = &js;
 }
 
-JsonValue JsonEntry::getValue() {
-    return JsonValue(0, 0);
+JsonValue* JsonEntry::getValue() {
+    return _value;
 }
 
-JsonValue JsonEntry::getName() {
-    return JsonValue(0, 0);
+JsonString* JsonEntry::getName() {
+    return _name;
+}
+
+JsonEntry::JsonEntry(){
+    std::cout << "create Entry \n";
 }

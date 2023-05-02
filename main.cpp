@@ -3,7 +3,7 @@
 #include "JsonParser.h"
 
 int main() {
-    JsonParser* jp;
+    /*JsonParser* jp;
     jp = new JsonParser("../res/test.json");
 
     //std::cout << jp->content().str() << std::endl;
@@ -32,6 +32,13 @@ int main() {
     //use R before " to use raw string
     //delete all entrys with name "1"
 
-    std::cout << "Hello, World!" << std::endl;
+    std::cout << "Hello, World!" << std::endl;*/
+    JsonParser* jp;
+    jp = new JsonParser("../res/test.json");
+    try {
+        jp->parse();
+    } catch (std::exception e) {
+        e.what();
+    }
     return 0;
 }

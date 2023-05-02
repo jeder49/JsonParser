@@ -12,7 +12,7 @@ private:
     bool _b;
 public:
     //constructor
-    JsonBoolean(int column, int row);
+    JsonBoolean(int column, int row, bool b);
 
     //getter and setter
     bool getBool();

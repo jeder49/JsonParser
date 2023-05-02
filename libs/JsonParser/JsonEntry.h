@@ -7,21 +7,24 @@
 
 #include <string>
 #include "JsonValue.h"
+#include "JsonString.h"
 
 class JsonEntry {
 private:
-    JsonValue name;
-    JsonValue value;
+    JsonString* _name = nullptr;
+    JsonValue* _value = nullptr;
 public:
-    //todo getter and setter
-    JsonValue getName();
-    JsonValue getValue();
+    JsonString* getName();
+    JsonValue* getValue();
 protected:
     //only parser and reader is allowed to change otherwise it does not fit to file
-    void setName(JsonValue);
-    void setValue(JsonValue);
+    void setName(JsonString js);
+    void setValue(JsonValue jv);
+
 public:
-    //destructor
+    // constructor
+    JsonEntry();
+    // destructor
     ~JsonEntry();
 };
 

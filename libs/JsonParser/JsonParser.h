@@ -12,14 +12,14 @@
 #include "JsonString.h"
 #include "JsonNumber.h"
 
-
-
 class JsonParser{
 //attributes
 private:
+    std::stringstream _content;
     std::string _path;
     JsonValue* _root;
-
+    int column = 0;
+    int row = 0;
 //methods
 public:
     // constructor
@@ -28,29 +28,34 @@ public:
 
     // other methods
     JsonValue* parse();
-    std::ifstream content();
     void printFolder();
+    void addRoot(JsonValue jv);
+    std::string getStringTill(char c);
+
 protected:
-    //JsonValue / JsonEntry
-    void write(const std::string& textToInsert, std::streampos position);
+    void write();
 
 public:
     // setter and getter
     void setPath(std::string path);
     std::string getPath();
-
+    std::string toString();
 
     // destructor
     ~JsonParser();
 
 private:
-    JsonValue* parseValue();
-    JsonObject* parseObject();
-    JsonArray* parseArray();
-    JsonString* parseString();
-    JsonNumber* parseNumber();
+    std::string toStringRecursive(JsonValue cursor, std::string prefix);
+    std::ifstream content();
 
-    bool expected(std::string);
+    JsonValue parseValue();
+    JsonObject parseObject();
+    JsonArray parseArray();
+    JsonString parseString();
+    JsonNumber parseNumber();
+    JsonEntry parseEntry();
+
+    bool expect(char c);
     void skipWhitespaces();
 };
 

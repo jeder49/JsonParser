@@ -9,13 +9,14 @@
 
 class JsonNumber : public JsonValue{
     //todo safe number
+    double _num;
 public:
     //constructor
     JsonNumber(int column, int row);
 
     //getter and setter
-    int getNumber();
-    void setNumber(int i);
+    double getNumber();
+    void setNumber(double num);
 
     //destructor
     ~JsonNumber();
