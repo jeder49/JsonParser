@@ -1818,7 +1818,8 @@ CMakeFiles/JsonParser.dir/main.cpp.obj: C:/Users/Workspace/Documents/GitHub/Json
   C:/Users/Workspace/Documents/GitHub/JsonParser/libs/JsonParser/JsonEntry.h \
   C:/Users/Workspace/Documents/GitHub/JsonParser/libs/JsonParser/JsonString.h \
   C:/Users/Workspace/Documents/GitHub/JsonParser/libs/JsonParser/JsonArray.h \
-  C:/Users/Workspace/Documents/GitHub/JsonParser/libs/JsonParser/JsonNumber.h
+  C:/Users/Workspace/Documents/GitHub/JsonParser/libs/JsonParser/JsonNumber.h \
+  C:/Users/Workspace/Documents/GitHub/JsonParser/libs/JsonParser/SyntaxException.h
 
 
 C:/Users/Workspace/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/231.8770.66/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/bits/stl_iterator_base_funcs.h:

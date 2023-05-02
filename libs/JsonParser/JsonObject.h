@@ -20,7 +20,7 @@ public:
     //todo: getter and setter
     JsonEntry getEntry(int index);
     std::vector<JsonEntry> getEntry(std::string name);
-    std::vector<JsonEntry> getEntrys();
+    std::vector<JsonEntry> getEntries();
 
     //name or other value by index
     JsonValue* getName(int index);

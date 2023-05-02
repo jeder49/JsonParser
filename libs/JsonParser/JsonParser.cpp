@@ -15,7 +15,7 @@
 #include "SyntaxException.h"
 
 /**
- * 
+ *
  */
 JsonParser::JsonParser() : _root(nullptr){
     std::cout << "created JsonParser" << std::endl;
@@ -86,7 +86,8 @@ JsonValue* JsonParser::parse() {
         } else if(static_cast<char>(ch) == '['){
             parseArray();
         } else{
-            throw SyntaxException("expected: { or [");
+            std::string msg = "expected: { or [ (column: " + std::string(_column) + ", row:" + std::string(_row) + ")";
+            throw SyntaxException(msg);
         }
     }
     return _root;
@@ -123,22 +124,23 @@ JsonValue JsonParser::parseValue() {
         return parseObject();
     }
     if (_content.peek() == 'n') {
-        JsonNull jn(column, row);
-        column++;
+        JsonNull jn(_column, _row);
+        _column++;
         return jn;
     }
     if (_content.peek() == 't'){
-        JsonBoolean jb(column, row, true);
-        column++;
+        JsonBoolean jb(_column, _row, true);
+        _column++;
         return jb;
     }
     if (_content.peek() == 'f') {
-        JsonBoolean jb(column, row, false);
-        column++;
+        JsonBoolean jb(_column, _row, false);
+        _column++;
         return jb;
     }
 
-    throw SyntaxException("expected: JsonValue: \", [, {, null, false or true");
+    std::string msg = "expected: JsonValue: \", [, {, null, false or true (column: " + _column + ", row:" + _row + ")";
+    throw SyntaxException(msg);
 }
 
 /**
@@ -147,17 +149,19 @@ JsonValue JsonParser::parseValue() {
  */
 JsonObject JsonParser::parseObject() {
     if(!expect('{')){
-        throw SyntaxException("expected: {");
+        std::string msg = "expected: { (column: " + _column + ", row:" + _row + ")";
+        throw SyntaxException(msg);
     }
-    JsonObject jo(column, row);
-    column++;
+    JsonObject jo(_column, _row);
+    _column++;
     do {
         skipWhitespaces();
         jo.addChild(parseEntry());
     } while(expect(','));
     skipWhitespaces();
     if(!expect('}')){
-        throw SyntaxException("expected: }");
+        std::string msg = "expected: } (column: " + _column + ", row:" + _row + ")";
+        throw SyntaxException(msg);
     }
     return jo;
 }
@@ -168,17 +172,19 @@ JsonObject JsonParser::parseObject() {
  */
 JsonArray JsonParser::parseArray() {
     if(!expect('[')){
-        throw SyntaxException("expected: [");
+        std::string msg = "expected: [ (column: " + _column + ", row:" + _row + ")";
+        throw SyntaxException(msg);
     }
-    JsonArray ja(column, row);
-    column++;
+    JsonArray ja(_column, _row);
+    _column++;
     do {
         skipWhitespaces();
         ja.addChild( parseValue() );
     } while(expect(','));
     skipWhitespaces();
     if(!expect(']')){
-        throw SyntaxException("expected: ]");
+        std::string msg = "expected: ] (column: " + _column + ", row:" + _row + ")";
+        throw SyntaxException(msg);
     }
     return ja;
 }
@@ -190,13 +196,15 @@ JsonArray JsonParser::parseArray() {
 JsonString JsonParser::parseString() {
     std::cout << "parseString" << std::endl;
     if(!expect ('\"')){
-        throw SyntaxException("expected: \"");
+        std::string msg = "expected: \" (column: " + _column + ", row:" + _row + ")";
+        throw SyntaxException(msg);
     }
-    JsonString js(column, row);
-    column++;
+    JsonString js(_column, _row);
+    _column++;
     js.setString(getStringTill('\"'));
     if(!expect ('\"')){
-        throw SyntaxException("expected: \"");
+        std::string msg = "expected: \" (column: " + _column + ", row:" + _row + ")";
+        throw SyntaxException(msg);
     }
     return js;
 }
@@ -206,8 +214,8 @@ JsonString JsonParser::parseString() {
  * @return
  */
 JsonNumber JsonParser::parseNumber() {
-    column++;
-    JsonNumber jn(column, row);
+    _column++;
+    JsonNumber jn(_column, _row);
     std::string s = "";
     if (expect ('-')) {
         s = s + '-';
@@ -279,7 +287,7 @@ void JsonParser::skipWhitespaces() {
         }
         if (_content.peek() == '\n'){
             _content.get();
-            row ++;
+            _row ++;
             b = true;
         }
     }
@@ -354,22 +362,22 @@ JsonEntry JsonParser::parseEntry() {
 }
 
 std::string JsonParser::toString(){
-    return toStringRecursive(* _root,"");
+    return toStringRecursive(_root,"");
 }
 
-std::string JsonParser::toStringRecursive(JsonValue cursor, std::string prefix){
+std::string JsonParser::toStringRecursive(JsonValue* cursor, std::string prefix){
     std::string res = "";
-    if(cursor.getType() == JsonType::OBJECT){
-        for(auto & i : static_cast<JsonObject>(cursor).getEntry()) {
-            res = res + prefix + "  " + "|->" + i.getName().toString() + " : " + toStringRecursive(cursor, "  ") + "\n";
+    if(cursor->getType() == JsonType::OBJECT){
+        for(auto & i : static_cast<JsonObject*>(cursor)->getEntries()) {
+            res = res + prefix + "  " + "|->" + i.getName()->toString() + " : " + toStringRecursive(cursor, "  ") + "\n";
         }
         return res;
-    } else if(cursor.getType() == JsonType::ARRAY){
-        for(auto & i : cursor.getChildren()) {
-            res = res + prefix + "  " + "|-> " + toStringRecursive(i, "  ") + "\n";
+    } else if(cursor->getType() == JsonType::ARRAY){
+        for(auto & i : cursor->getChildren()) {
+            res = res + prefix + "  " + "|-> " + toStringRecursive(&i, "  ") + "\n";
         }
         return res;
     } else {
-        return cursor.toString();
+        return cursor->toString();
     }
 }

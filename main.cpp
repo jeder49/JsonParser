@@ -1,6 +1,7 @@
 #include <iostream>
 #include <filesystem>
 #include "JsonParser.h"
+#include "SyntaxException.h"
 
 int main() {
     /*JsonParser* jp;
@@ -37,8 +38,9 @@ int main() {
     jp = new JsonParser("../res/test.json");
     try {
         jp->parse();
-    } catch (std::exception e) {
-        e.what();
+    } catch (SyntaxException e) {
+        std::cout << e.toString() << std::endl;
     }
+    //jp->toString();
     return 0;
 }

@@ -14,8 +14,8 @@ private:
 public:
     SyntaxException(std::string msg):_msg("Syntax Error: " + msg){}
 
-    const char* what() const noexcept override{
-        return  + _msg.c_str();
+    std::string toString(){
+        return _msg;
     }
 };
 

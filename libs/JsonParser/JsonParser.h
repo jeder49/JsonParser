@@ -18,8 +18,8 @@ private:
     std::stringstream _content;
     std::string _path;
     JsonValue* _root;
-    int column = 0;
-    int row = 0;
+    int _column = 0;
+    int _row = 0;
 //methods
 public:
     // constructor
@@ -45,7 +45,7 @@ public:
     ~JsonParser();
 
 private:
-    std::string toStringRecursive(JsonValue cursor, std::string prefix);
+    std::string toStringRecursive(JsonValue* cursor, std::string prefix);
     std::ifstream content();
 
     JsonValue parseValue();

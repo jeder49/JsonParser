@@ -27,7 +27,7 @@ JsonEntry JsonObject::getEntry(int index) {
     return _entry[index];
 }
 
-std::vector<JsonEntry> JsonObject::getEntrys() {
+std::vector<JsonEntry> JsonObject::getEntries() {
     return _entry;
 }
 

@@ -210,4 +210,5 @@ CMakeFiles/JsonParser.dir/main.cpp.obj: \
  C:/Users/Workspace/Documents/GitHub/JsonParser/libs/JsonParser/JsonEntry.h \
  C:/Users/Workspace/Documents/GitHub/JsonParser/libs/JsonParser/JsonString.h \
  C:/Users/Workspace/Documents/GitHub/JsonParser/libs/JsonParser/JsonArray.h \
- C:/Users/Workspace/Documents/GitHub/JsonParser/libs/JsonParser/JsonNumber.h
+ C:/Users/Workspace/Documents/GitHub/JsonParser/libs/JsonParser/JsonNumber.h \
+ C:/Users/Workspace/Documents/GitHub/JsonParser/libs/JsonParser/SyntaxException.h
